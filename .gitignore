@@ -2,3 +2,5 @@
 *.jpeg
 *.jpg
 *.png
+*.zip
+cookpad/*
