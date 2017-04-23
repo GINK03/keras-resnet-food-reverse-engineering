@@ -111,16 +111,16 @@ def pred():
   item_index = pickle.loads(open("cookpad/item_index.pkl", "rb").read())
   index_items = { index:item for item, index in item_index.items()}
   model = build_model()
-  model = load_model(sorted(glob.glob('models/*.model'))[-1]) 
+  model = load_model(sorted(glob.glob('models/model00060.model'))[-1]) 
   target_size = (224,224)
   dir_path = "to_pred/*"
   max_size = len(glob.glob(dir_path))
   for i, name in enumerate(glob.glob(dir_path)):
-    print(i, max_size, name)
     try:
       img = Image.open(name)
     except OSError as e:
       continue
+    print(i, max_size, name.split('/')[-1])
     w, h = img.size
     if w > h :
       blank = Image.new('RGB', (w, w))
@@ -128,9 +128,7 @@ def pred():
       blank = Image.new('RGB', (h, h))
     blank.paste(img, (0, 0) )
     blank = blank.resize( target_size )
-    print(blank.size)
     Xs = np.array([np.asanyarray(blank)])
-    print(Xs.shape)
     result = model.predict(Xs)
     ares   = [(index_items[index], w) for index, w in enumerate(result.tolist()[0]) ]
     for en, (item, w) in enumerate(sorted(ares, key=lambda x:x[1]*-1)[:10]):
